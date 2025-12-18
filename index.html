@@ -114,26 +114,38 @@
   </div>
 
 <script>
-  document.getElementById('signupForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUXe80vfIMkBdiymydfK3pJTyNbo0fB8loT6m1HINwhZ0iRWI1B_CRJCQ7PBCQgi04og/exec";
 
-    const participant = {
-      name: document.getElementById('name').value,
-      empCode: document.getElementById('empCode').value,
-      email: document.getElementById('email').value,
-      bu: document.getElementById('bu').value,
-      location: document.getElementById('location').value,
-      status: 'Registered'
-    };
+document.getElementById("signupForm").addEventListener("submit", function (e) {
+  e.preventDefault();
 
-    console.log('Registered Participant:', participant);
+  const payload = {
+    name: name.value,
+    empCode: empCode.value,
+    email: email.value,
+    bu: bu.value,
+    location: location.value
+  };
 
-    alert(
-      'Registration Successful!\n\nNext Steps:\n1. Download the PACER App\n2. Sign up using your official email ID\n3. Start tracking your daily steps\n\nDownload Links:\nAndroid: https://play.google.com/store/apps/details?id=com.pacer.androidapp\niOS: https://apps.apple.com/app/pacer-pedometer-step-tracker/id600446812'
-    );
-
-    this.reset();
-  });
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  })
+    .then(res => res.json())
+    .then(data => {
+      alert(
+        `Registration Successful!\n\n` +
+        `You have been assigned to:\n${data.teamName}\n\n` +
+        `Next Steps:\n1. Download PACER App\n2. Track steps daily\n\n` +
+        `Android:\nhttps://play.google.com/store/apps/details?id=com.pacer.androidapp\n\n` +
+        `iOS:\nhttps://apps.apple.com/app/pacer-pedometer-step-tracker/id600446812`
+      );
+      document.getElementById("signupForm").reset();
+    })
+    .catch(() => {
+      alert("Error submitting form. Please try again.");
+    });
+});
 </script>
 
 </body>
